@@ -7,7 +7,6 @@ import CartContext from '../../store/cart-context';
 import Checkout from './Checkout';
 
 const Cart = (props) => {
-  console.log('props....', props);
   const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
@@ -21,7 +20,7 @@ const Cart = (props) => {
   };
 
   const cartItemAddHandler = (item) => {
-    cartCtx.addItem(item);
+    cartCtx.addItem({ ...item, amount: 1 });
   };
 
   const orderHandler = () => {
@@ -30,10 +29,6 @@ const Cart = (props) => {
 
   const submitOrderHandler = async (userData) => {
     setIsSubmitting(true);
-    console.log('inside submittttt');
-    console.log('userDataaa...', userData);
-    console.log('ordereditesm...', cartCtx.items);
-    console.log('totalamount....', totalAmount);
     await fetch('https://react-http-6b4a6.firebaseio.com/orders.json', {
       method: 'POST',
       body: JSON.stringify({
@@ -42,11 +37,11 @@ const Cart = (props) => {
         totalAmount: totalAmount,
       }),
     });
-    console.log('body...', JSON.stringify({
+    console.log('body....', JSON.stringify({
       user: userData,
       orderedItems: cartCtx.items,
       totalAmount: totalAmount,
-    }));
+    }),);
     setIsSubmitting(false);
     setDidSubmit(true);
     cartCtx.clearCart();
@@ -58,7 +53,7 @@ const Cart = (props) => {
         <CartItem
           key={item.id}
           name={item.name}
-          quantity={item.quantity}
+          amount={item.amount}
           price={item.price}
           onRemove={cartItemRemoveHandler.bind(null, item.id)}
           onAdd={cartItemAddHandler.bind(null, item)}

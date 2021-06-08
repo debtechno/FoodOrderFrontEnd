@@ -10,7 +10,7 @@ const defaultCartState = {
 const cartReducer = (state, action) => {
   if (action.type === 'ADD') {
     const updatedTotalAmount =
-      state.totalAmount + action.item.price * action.item.quantity;
+      state.totalAmount + action.item.price * action.item.amount;
 
     const existingCartItemIndex = state.items.findIndex(
       (item) => item.id === action.item.id
