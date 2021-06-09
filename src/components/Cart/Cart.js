@@ -13,6 +13,7 @@ const Cart = (props) => {
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `₹${cartCtx.totalAmount.toFixed(2)}`;
+  const backendTotalAmount = `${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
 
   const cartItemRemoveHandler = (id) => {
@@ -28,19 +29,28 @@ const Cart = (props) => {
   };
 
   const submitOrderHandler = async (userData) => {
+    const userDetails = {
+      userName: userData.name,
+      street: userData.street,
+      city: userData.city,
+      postalCode: userData.postalCode
+    }
     setIsSubmitting(true);
-    await fetch('https://react-http-6b4a6.firebaseio.com/orders.json', {
+    await fetch('http://localhost:8080/api/v1/orderDetails', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
-        user: userData,
-        orderedItems: cartCtx.items,
-        totalAmount: totalAmount,
+        user: userDetails,
+        items: cartCtx.items,
+        totalAmount: backendTotalAmount,
       }),
     });
     console.log('body....', JSON.stringify({
-      user: userData,
-      orderedItems: cartCtx.items,
-      totalAmount: totalAmount,
+      user: userDetails,
+      items: cartCtx.items,
+      totalAmount: backendTotalAmount,
     }),);
     setIsSubmitting(false);
     setDidSubmit(true);
