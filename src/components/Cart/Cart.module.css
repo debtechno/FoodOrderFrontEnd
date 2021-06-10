@@ -44,3 +44,11 @@
   background-color: #8a2b06;
   color: white;
 }
+
+.doPayment {
+  color: red;
+}
+
+.afterPayment {
+  color: green;
+}
