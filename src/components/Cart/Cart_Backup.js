@@ -7,13 +7,13 @@ import CartContext from '../../store/cart-context';
 import Checkout from './Checkout';
 
 const Cart = (props) => {
+  console.log('props....', props);
   const [isCheckout, setIsCheckout] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [didSubmit, setDidSubmit] = useState(false);
   const cartCtx = useContext(CartContext);
 
   const totalAmount = `₹${cartCtx.totalAmount.toFixed(2)}`;
-  const backendTotalAmount = `${cartCtx.totalAmount.toFixed(2)}`;
   const hasItems = cartCtx.items.length > 0;
 
   const cartItemRemoveHandler = (id) => {
@@ -29,29 +29,27 @@ const Cart = (props) => {
   };
 
   const submitOrderHandler = async (userData) => {
-    const userDetails = {
-      user_name: userData.user_name,
-      street: userData.street,
-      city: userData.city,
-      postalCode: userData.postalCode
-    }
     setIsSubmitting(true);
+    /*console.log('inside submittttt');
+    console.log('userDataaa...', userData);
+    console.log('ordereditesm...', cartCtx.items);
+    console.log('totalamount....', totalAmount);*/
     await fetch('http://localhost:8080/confirmOrder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user: userDetails,
+        user: userData,
         items: cartCtx.items,
-        totalAmount: backendTotalAmount,
+        totalAmount: totalAmount,
       }),
     });
-    console.log('body....', JSON.stringify({
-      user: userDetails,
-      items: cartCtx.items,
-      totalAmount: backendTotalAmount,
-    }),);
+    console.log('body...', JSON.stringify({
+      user: userData,
+      orderedItems: cartCtx.items,
+      totalAmount: totalAmount,
+    }));
     setIsSubmitting(false);
     setDidSubmit(true);
     cartCtx.clearCart();
